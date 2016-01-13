@@ -9,10 +9,25 @@ If the header isn't present, the library will generate a transaction with a 'tid
 Go provides support for passing around variables associated with a request lifecycle via the [context package](http://www.gorillatoolkit.org/pkg/context)
 
 Best practice for using this is to specify a context as the first argument to your function
- (see [here](https://blog.golang.org/context) for examples that this library draws on).
+ (see [here](https://blog.golang.org/context) for more information along with examples that this library draws on).
 
-For outputting a transactionID to logrus, use like this:
+## Examples
+To extract a transactionID from a request, and create one if none found:
+
+    transactionID := transactionidutils.GetTransactionIDFromRequest(req)
+
+To store that on a context:
+
+    transactionAwareContext := transactionidutils.TransactionAwareContext(context.BaseContext(), transactionID)
+
+For extracting from a context:
+
+  transactionID, err := GetTransactionIDFromContext(ctx)
+
+It's expected that the transaction ID will be used to output logs. An example using logrus:
 
 	log := log.WithFields(log.Fields{
 		transactionIdKey: ctx.Value(transactionIdKey),
 	})
+
+NB: this will use the standard transaction id key("transaction_id") that is already used for Content programme log files.
