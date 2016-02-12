@@ -14,7 +14,7 @@ func TestGetKnownTransactionIDFromRequest(t *testing.T) {
 	assert := assert.New(t)
 
 	header := http.Header{}
-	header.Add(transactionIDHeader, knownTransactionID)
+	header.Set(TransactionIDHeader, knownTransactionID)
 
 	req := &http.Request{Header: header}
 
@@ -42,6 +42,7 @@ func TestGetDifferentGeneratedTransactionIDs(t *testing.T) {
 	req := &http.Request{Header: header}
 
 	transactionID := GetTransactionIDFromRequest(req)
+	req.Header.Del(TransactionIDHeader)
 	secondTransactionID := GetTransactionIDFromRequest(req)
 	assert.NotEqual(transactionID, secondTransactionID, "Transaction IDs not unique")
 }
@@ -49,14 +50,14 @@ func TestGetDifferentGeneratedTransactionIDs(t *testing.T) {
 func TestTransactionAwareContextAddsTransactionIDToContext(t *testing.T) {
 	assert := assert.New(t)
 	transactionAwareContext := TransactionAwareContext(context.Background(), knownTransactionID)
-	assert.Equal(knownTransactionID, transactionAwareContext.Value(transactionIDKey), "wrong transactionID on context")
+	assert.Equal(knownTransactionID, transactionAwareContext.Value(TransactionIDKey), "wrong transactionID on context")
 }
 
 func TestTransactionAwareContextOverridesAnyExistingTransactionIDToContext(t *testing.T) {
 	assert := assert.New(t)
 	existingTransactionAwareContext := TransactionAwareContext(context.Background(), "different transaction ID")
 	transactionAwareContext := TransactionAwareContext(existingTransactionAwareContext, knownTransactionID)
-	assert.Equal(knownTransactionID, transactionAwareContext.Value(transactionIDKey), "wrong transactionID on context")
+	assert.Equal(knownTransactionID, transactionAwareContext.Value(TransactionIDKey), "wrong transactionID on context")
 }
 
 func TestCanGetTransactionIDFromContext(t *testing.T) {

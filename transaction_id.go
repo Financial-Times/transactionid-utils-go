@@ -24,6 +24,7 @@ func GetTransactionIDFromRequest(req *http.Request) string {
 	transactionID := req.Header.Get(TransactionIDHeader)
 	if transactionID == "" {
 		transactionID = "tid_" + randString(10)
+		req.Header.Set(TransactionIDHeader, transactionID)
 	}
 	return transactionID
 }
