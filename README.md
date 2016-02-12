@@ -6,7 +6,7 @@ This library supports transaction id handling. It provides methods for checking 
 If the header isn't present, the library will generate a transaction with a 'tid_' prefix
  and a random 10 character string.
 
-Go provides support for passing around variables associated with a request lifecycle via the [context package](http://www.gorillatoolkit.org/pkg/context)
+Go provides support for passing around variables associated with a request lifecycle via the [context package](https://godoc.org/golang.org/x/net/context)
 
 Best practice for using this is to specify a context as the first argument to your function
  (see [here](https://blog.golang.org/context) for more information along with examples that this library draws on).
@@ -18,7 +18,9 @@ To extract a transactionID from a request, and create one if none found:
 
 To store that on a context:
 
-    transactionAwareContext := transactionidutils.TransactionAwareContext(context.BaseContext(), transactionID)
+    transactionAwareContext := transactionidutils.TransactionAwareContext(context.Background(), transactionID)
+
+NB: context.Background() is a non-nil, empty Context, typically used as the top-level context for incoming requests.
 
 For extracting from a context:
 
