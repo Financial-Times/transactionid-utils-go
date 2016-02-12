@@ -4,6 +4,7 @@ import (
 	"errors"
 	"math/rand"
 	"net/http"
+	"time"
 
 	"golang.org/x/net/context"
 )
@@ -15,6 +16,10 @@ const TransactionIDHeader = "X-Request-Id"
 const TransactionIDKey string = "transaction_id"
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func init() {
+	rand.Seed(time.Now().UTC().UnixNano())
+}
 
 // GetTransactionIDFromRequest will look on the request
 // for an 'X-Request-Id' header, and use that value as the returned transactionID.
