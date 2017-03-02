@@ -15,7 +15,7 @@ const TransactionIDHeader = "X-Request-Id"
 //TransactionIDKey is the key used to store the value on the context
 const TransactionIDKey string = "transaction_id"
 
-var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 var lettersLen int
 
 func init() {
