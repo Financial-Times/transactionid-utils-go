@@ -16,8 +16,10 @@ const TransactionIDHeader = "X-Request-Id"
 const TransactionIDKey string = "transaction_id"
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+var lettersLen int
 
 func init() {
+	lettersLen = len(letters)
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
@@ -61,7 +63,7 @@ func GetTransactionIDFromContext(ctx context.Context) (string, error) {
 func randString(n int) string {
 	b := make([]rune, n)
 	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
+		b[i] = letters[rand.Intn(lettersLen)]
 	}
 	return string(b)
 }
