@@ -2,6 +2,7 @@ package transactionidutils
 
 import (
 	"net/http"
+	"regexp"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -73,4 +74,16 @@ func TestErrorHandlingForNoTransactionIDOnContext(t *testing.T) {
 	transactionID, err := GetTransactionIDFromContext(context.Background())
 	assert.Error(err, "No error returned")
 	assert.Equal("", transactionID, "transactionID should be empty on error")
+}
+
+func TestNewTransactionID(t *testing.T) {
+	assert := assert.New(t)
+	transactionID := NewTransactionID()
+	transactionID2 := NewTransactionID()
+
+	assert.NotEqual(transactionID, transactionID2)
+
+	regex := regexp.MustCompile(`tid_[\S]+`)
+	assert.Regexp(regex, transactionID)
+	assert.Regexp(regex, transactionID2)
 }

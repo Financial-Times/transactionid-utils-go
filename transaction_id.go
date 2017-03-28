@@ -15,9 +15,11 @@ const TransactionIDHeader = "X-Request-Id"
 //TransactionIDKey is the key used to store the value on the context
 const TransactionIDKey string = "transaction_id"
 
-var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+var lettersLen int
 
 func init() {
+	lettersLen = len(letters)
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
@@ -28,10 +30,15 @@ func init() {
 func GetTransactionIDFromRequest(req *http.Request) string {
 	transactionID := req.Header.Get(TransactionIDHeader)
 	if transactionID == "" {
-		transactionID = "tid_" + randString(10)
+		transactionID = NewTransactionID()
 		req.Header.Set(TransactionIDHeader, transactionID)
 	}
 	return transactionID
+}
+
+// NewTransactionID generates a new random transaction ID conforming to the FT spec
+func NewTransactionID() string {
+	return "tid_" + randString(10)
 }
 
 // TransactionAwareContext  will take the
@@ -56,7 +63,7 @@ func GetTransactionIDFromContext(ctx context.Context) (string, error) {
 func randString(n int) string {
 	b := make([]rune, n)
 	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
+		b[i] = letters[rand.Intn(lettersLen)]
 	}
 	return string(b)
 }
