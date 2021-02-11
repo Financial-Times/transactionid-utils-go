@@ -1,27 +1,22 @@
 package transactionidutils
 
 import (
-	"errors"
-	"math/rand"
+	"fmt"
 	"net/http"
-	"time"
 
 	"golang.org/x/net/context"
+
+	"github.com/dchest/uniuri"
 )
 
-//TransactionIDHeader is the request header to look for
-const TransactionIDHeader = "X-Request-Id"
+type tidKeyType int
 
-//TransactionIDKey is the key used to store the value on the context
-const TransactionIDKey string = "transaction_id"
-
-var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-var lettersLen int
-
-func init() {
-	lettersLen = len(letters)
-	rand.Seed(time.Now().UTC().UnixNano())
-}
+const (
+	//TransactionIDHeader is the request header to look for
+	TransactionIDHeader = "X-Request-Id"
+	//TransactionIDKey is the key used to store the value on the context
+	TransactionIDKey tidKeyType = iota
+)
 
 // GetTransactionIDFromRequest will look on the request
 // for an 'X-Request-Id' header, and use that value as the returned transactionID.
@@ -38,7 +33,7 @@ func GetTransactionIDFromRequest(req *http.Request) string {
 
 // NewTransactionID generates a new random transaction ID conforming to the FT spec
 func NewTransactionID() string {
-	return "tid_" + randString(10)
+	return fmt.Sprintf("tid_%s", uniuri.NewLen(10))
 }
 
 // TransactionAwareContext  will take the
@@ -57,13 +52,5 @@ func GetTransactionIDFromContext(ctx context.Context) (string, error) {
 	if ok {
 		return transactionID, nil
 	}
-	return "", errors.New("No transactionID found")
-}
-
-func randString(n int) string {
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letters[rand.Intn(lettersLen)]
-	}
-	return string(b)
+	return "", fmt.Errorf("no transactionID found")
 }
