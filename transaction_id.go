@@ -14,8 +14,8 @@ type tidKeyType int
 const (
 	//TransactionIDHeader is the request header to look for
 	TransactionIDHeader = "X-Request-Id"
-	//TransactionIDKey is the key used to store the value on the context
-	TransactionIDKey tidKeyType = iota
+	//transactionIDKey is the key used to store the value on the context
+	transactionIDKey tidKeyType = iota
 )
 
 // GetTransactionIDFromRequest will look on the request
@@ -39,7 +39,7 @@ func NewTransactionID() string {
 // TransactionAwareContext  will take the
 // context passed in and store the transactionID on it
 func TransactionAwareContext(ctx context.Context, transactionID string) context.Context {
-	return context.WithValue(ctx, TransactionIDKey, transactionID)
+	return context.WithValue(ctx, transactionIDKey, transactionID)
 }
 
 // GetTransactionIDFromContext  will look for a transactionID
@@ -48,7 +48,7 @@ func TransactionAwareContext(ctx context.Context, transactionID string) context.
 func GetTransactionIDFromContext(ctx context.Context) (string, error) {
 	// ctx.Value returns nil if ctx has no value for the key;
 	// string type assertion returns ok=false for nil.
-	transactionID, ok := ctx.Value(TransactionIDKey).(string)
+	transactionID, ok := ctx.Value(transactionIDKey).(string)
 	if ok {
 		return transactionID, nil
 	}
