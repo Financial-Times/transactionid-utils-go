@@ -1,11 +1,11 @@
 module github.com/Financial-Times/transactionid-utils-go
 
-go 1.22
+go 1.23
 
 require (
 	github.com/dchest/uniuri v1.2.0
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/net v0.25.0
+	golang.org/x/net v0.31.0
 )
 
 require (
