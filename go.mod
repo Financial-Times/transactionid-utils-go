@@ -1,6 +1,6 @@
 module github.com/Financial-Times/transactionid-utils-go
 
-go 1.23
+go 1.25
 
 require (
 	github.com/dchest/uniuri v1.2.0
